@@ -19,3 +19,8 @@ h2:first-of-type {
 input[type=number] {
     width: 6em;
 }
+
+#canvasGrid {
+    display: block;
+    margin: 0 auto;
+}
