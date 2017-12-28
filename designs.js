@@ -88,26 +88,40 @@ function makeGrid(n, m) {
 	}
 }
 
-// Change color of the selected grid square
-canvas.click(function(event) {
-	let offset = $(this).offset(); // get the element offset
+
+// Get the selected grid square
+function getSquare(event, canvas) {
+	let offset = canvas.offset(); // get the element offset
 	let x = event.pageX - offset.left; // relative 'x' coordinate of event
 	let y = event.pageY - offset.top; // relative 'y' coordinate of event
-	let xMod = x%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
-	let yMod = y%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
-	let xSqr = x - xMod; // 'x' square coordinate
-	let ySqr = y - yMod; // 'y' square coordinate
+	let xM = x%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
+	let yM = y%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
+	let xS = x - xM; // 'x' square coordinate
+	let yS = y - yM; // 'y' square coordinate
+	return {xM: xM, yM: yM, xS: xS, yS: yS}; // return object
+}
 
-	// If the mouse click is inside the square, not over the grid lines
-	if (xMod !== 0 && yMod !== 0) {
-
-		// Draw selected square with selected color
+// Draw selected square with selected color
+function drawSquare(xSqr, ySqr, color) {
 		ctx.beginPath(); // empty the previous  paths
 		ctx.rect(xSqr, ySqr, BASE_SIZE, BASE_SIZE); // path for the square
 		ctx.fillStyle = color; // fill the square with selected color
 		ctx.lineStyle = 'rgb(10,10,10)';
 		ctx.fill();
 		ctx.stroke();
+}
+
+// Change color of the selected grid square
+canvas.click(function(event) {
+	let coordinates = getSquare(event, canvas); // get square object coordinates
+	let xMod = coordinates.xM;
+	let yMod = coordinates.yM;
+	let xSqr = coordinates.xS;
+	let ySqr = coordinates.yS;
+
+	// If the mouse click is inside the square, not over the grid lines
+	if (xMod !== 0 && yMod !== 0) {
+		drawSquare(xSqr, ySqr, color);
 	}
 });
 
@@ -115,23 +129,14 @@ canvas.click(function(event) {
 // misclicks
 canvas.contextmenu(function(event) {
 	event.preventDefault();
-	let offset = $(this).offset(); // get the element offset
-	let x = event.pageX - offset.left; // relative 'x' coordinate of event
-	let y = event.pageY - offset.top; // relative 'y' coordinate of event
-	let xMod = x%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
-	let yMod = y%BASE_SIZE; // Modulo of 'x' by BASE_SIZE
-	let xSqr = x - xMod; // 'x' square coordinate
-	let ySqr = y - yMod; // 'y' square coordinate
+	let coordinates = getSquare(event, canvas); // get square object coordinates
+	let xMod = coordinates.xM;
+	let yMod = coordinates.yM;
+	let xSqr = coordinates.xS;
+	let ySqr = coordinates.yS;
 
 	// If the mouse click is inside the square, not over the grid lines
 	if (xMod !== 0 && yMod !== 0) {
-
-		// Draw selected square with selected color
-		ctx.beginPath(); // empty the previous  paths
-		ctx.rect(xSqr, ySqr, BASE_SIZE, BASE_SIZE); // path for the square
-		ctx.fillStyle = '#FFF'; // fill the square with selected color
-		ctx.lineStyle = 'rgb(10,10,10)';
-		ctx.fill();
-		ctx.stroke();
+		drawSquare(xSqr, ySqr, '#FFF');
 	}
 });
