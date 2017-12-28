@@ -1,23 +1,27 @@
 // Select color input
+const colorPicker = $('#colorPicker');
 let color;
 
-$('#colorPicker').change(function() {
+colorPicker.change(function() {
 	color = $(this).val();
 });
 
 // Getting canvas element and obtaining the rendering context
-let canvas = $('#canvasGrid').get(0);
-let ctx = canvas.getContext('2d');
+const canvas = $('#canvasGrid');
+const ctx = canvas.get(0).getContext('2d');
 
 // Fixed size square that will be
 // composing the grid (16 pixels square side)
 const BASE_SIZE = 16;
+const sizePicker = $('#sizePicker');
+const inputHeight = $('#input_height');
+const inputWidth = $('#input_width');
 
 // Select size input
-$('#sizePicker').submit(function(event) {
+sizePicker.submit(function(event) {
 	event.preventDefault();
-	let n = $('#input_height').val();
-	let m = $('#input_width').val();
+	let n = inputHeight.val();
+	let m = inputWidth.val();
 	makeGrid(n, m);
 });
 
@@ -47,7 +51,7 @@ function makeGrid(n, m) {
 		canvasHeight = n*BASE_SIZE;
 
 		// Display max height on input box
-		$('#input_height').val(n);
+		inputHeight.val(n);
 	}
 
 	if (canvasWidth > viewportWidth*0.9) {   // canvas width greater than 90% vw
@@ -58,12 +62,12 @@ function makeGrid(n, m) {
 		canvasWidth = m*BASE_SIZE;
 
 		// Display max width on input box
-		$('#input_width').val(m);
+		inputWidth.val(m);
 	}
 
 	// Setting canvas size
-	canvas.height = canvasHeight;
-	canvas.width = canvasWidth;
+	canvas.get(0).height = canvasHeight;
+	canvas.get(0).width = canvasWidth;
 
 	// Drawing the vertical lines
 	for (let i = 0; i <= m; i++) {
@@ -85,7 +89,7 @@ function makeGrid(n, m) {
 }
 
 // Change color of the selected grid square
-$('#canvasGrid').click(function(event) {
+canvas.click(function(event) {
 	let offset = $(this).offset(); // get the element offset
 	let x = event.pageX - offset.left; // relative 'x' coordinate of event
 	let y = event.pageY - offset.top; // relative 'y' coordinate of event
@@ -109,7 +113,7 @@ $('#canvasGrid').click(function(event) {
 
 // Right click makes that square become white, so it is easy correcting
 // misclicks
-$('#canvasGrid').contextmenu(function(event) {
+canvas.contextmenu(function(event) {
 	event.preventDefault();
 	let offset = $(this).offset(); // get the element offset
 	let x = event.pageX - offset.left; // relative 'x' coordinate of event
